@@ -1,0 +1,9 @@
+{
+  "name": "Copy of Interactive Story Weaver V3",
+  "description": "A dynamic choose-your-own-adventure application powered by Gemini. Craft new tales with AI-generated narratives and visuals, or seed your own stories and bring them to life. Your journey, your choices, vividly imagined.",
+  "environmentVariables": [
+    "API_KEY"
+  ],
+  "requestFramePermissions": [],
+  "prompt": ""
+}
