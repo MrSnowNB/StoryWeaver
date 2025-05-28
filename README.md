@@ -87,3 +87,17 @@ This document outlines potential improvements and new features for the Interacti
 
 ---
 This plan serves as a reference for ongoing development and feature ideation for the Interactive Story Weaver.
+
+## Deploying to GitHub Pages and API Key Security
+
+This application is configured for deployment to GitHub Pages. However, a critical consideration is the `GEMINI_API_KEY`.
+
+**Important:** The current setup in `vite.config.ts` embeds the `GEMINI_API_KEY` directly into the client-side JavaScript bundle. If your repository is public, this will expose your API key to anyone who inspects the site's code. This is a significant security risk and can lead to misuse of your API key and potential charges.
+
+**Recommendations:**
+
+*   **Private Repository:** If you intend to use the API key directly in this manner, ensure your GitHub repository is **private**.
+*   **Backend Proxy:** For public repositories, the recommended approach is to **not** embed the API key in the client-side code. Instead, create a simple backend proxy server that your application can query. This proxy server would securely store the API key and make requests to the Gemini API on behalf of the client. The client application would then only communicate with your proxy, not directly with the Gemini API, thus keeping the key safe.
+*   **Environment Variables with Secure Build Environment:** Some hosting platforms allow you to set environment variables that are only available during the build process and not in the client-side code. For GitHub Pages, this typically still requires a backend proxy for runtime API calls.
+
+Please consider these points carefully before deploying to a public GitHub Pages site.
