@@ -15,6 +15,22 @@ const NewStoryForm: React.FC<NewStoryFormProps> = ({ onSubmit, onBack, theme }) 
   const [enableImageGeneration, setEnableImageGeneration] = useState<boolean>(true);
   const [customInitialPrompt, setCustomInitialPrompt] = useState<string>('');
 
+  const learningTips = {
+    genre: {
+      "Sci-Fi": "Tip: Sci-Fi stories often explore future technologies, space travel, and societal changes. They can be optimistic or cautionary, focusing on 'what if?' scenarios.",
+      "Fantasy": "Tip: Fantasy stories usually involve magical elements, mythical creatures, and epic quests in imaginary worlds. They often explore themes of good vs. evil.",
+      "Horror": "Tip: Horror aims to evoke fear or dread. Common elements include supernatural beings, psychological thrills, and suspenseful situations where characters are in danger.",
+    },
+    setting: {
+      "Futuristic Megacity": "Tip: A megacity setting suggests advanced technology, dense populations, and often themes of social stratification or rebellion.",
+      "Enchanted Forest": "Tip: Enchanted forests are common in fantasy, filled with magic, hidden dangers, and mysterious creatures. They can symbolize the unknown or a journey into the subconscious.",
+    },
+    protagonist: {
+      "Brave Knight": "Tip: Knights often embody honor, courage, and duty. Their stories might involve quests, protecting the innocent, or facing moral dilemmas.",
+      "Cunning Detective": "Tip: Detectives are known for their intellect, observation skills, and pursuit of truth. Their stories usually revolve around solving mysteries and uncovering secrets.",
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const initialPrompt = customInitialPrompt.trim() || `Begin a ${storyLength === "Short Story (No Chapters)" ? "short " : ""}${genre} story set in a ${setting}, featuring a ${protagonist}. Describe the opening scene.`;
@@ -83,8 +99,23 @@ const NewStoryForm: React.FC<NewStoryFormProps> = ({ onSubmit, onBack, theme }) 
         </h2>
         <form onSubmit={handleSubmit}>
           <SelectField label="Genre" value={genre} onChange={(e) => setGenre(e.target.value as StoryGenre)} options={STORY_GENRES} />
+          {learningTips.genre[genre as keyof typeof learningTips.genre] && (
+            <div className={`mt-1 p-2 rounded-md ${theme.colors.secondary} ${theme.colors.secondaryText} text-xs animate-fadeInUp`}>
+              {learningTips.genre[genre as keyof typeof learningTips.genre]}
+            </div>
+          )}
           <SelectField label="Setting" value={setting} onChange={(e) => setSetting(e.target.value as StorySetting)} options={STORY_SETTINGS} />
+          {learningTips.setting[setting as keyof typeof learningTips.setting] && (
+            <div className={`mt-1 p-2 rounded-md ${theme.colors.secondary} ${theme.colors.secondaryText} text-xs animate-fadeInUp`}>
+              {learningTips.setting[setting as keyof typeof learningTips.setting]}
+            </div>
+          )}
           <SelectField label="Protagonist Archetype" value={protagonist} onChange={(e) => setProtagonist(e.target.value as ProtagonistArchetype)} options={PROTAGONIST_ARCHETYPES} />
+          {learningTips.protagonist[protagonist as keyof typeof learningTips.protagonist] && (
+            <div className={`mt-1 p-2 rounded-md ${theme.colors.secondary} ${theme.colors.secondaryText} text-xs animate-fadeInUp`}>
+              {learningTips.protagonist[protagonist as keyof typeof learningTips.protagonist]}
+            </div>
+          )}
           <SelectField label="Story Length" value={storyLength} onChange={(e) => setStoryLength(e.target.value as StoryLengthOption)} options={STORY_LENGTH_OPTIONS} />
           
           <div className="my-6 flex justify-center">
@@ -143,6 +174,17 @@ const NewStoryForm: React.FC<NewStoryFormProps> = ({ onSubmit, onBack, theme }) 
           </div>
         </form>
       </div>
+      {/* Minimal fade-in animation for tips */}
+      <style>{`
+        .animate-fadeInUp { 
+          animation: NewStoryForm_fadeInUp_animation 0.3s ease-out forwards; 
+          opacity: 0;
+        }
+        @keyframes NewStoryForm_fadeInUp_animation { 
+          from { opacity: 0; transform: translateY(5px); } 
+          to { opacity: 1; transform: translateY(0); } 
+        }
+      `}</style>
     </div>
   );
 };

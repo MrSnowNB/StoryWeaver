@@ -76,7 +76,10 @@ const ImagePromptEditModal: React.FC<ImagePromptEditModalProps> = ({ initialProm
         <h3 id="image-prompt-edit-modal-title" className={`text-2xl font-semibold mb-4 ${theme.colors.text}`}>
           Edit Image Prompt
         </h3>
-        <p className={`text-sm mb-4 ${theme.colors.secondaryText}`}>
+        <p className={`text-sm mb-3 ${theme.colors.secondaryText}`}>
+          The AI has suggested an image prompt based on the story. You can edit it below to refine the details, style, or composition of the image you want to generate. Adjusting prompts is a great way to guide the AI and a common part of creative AI workflows!
+        </p>
+        <p className={`text-xs italic mb-4 ${theme.colors.secondaryText} opacity-80`}>
           Review or modify the AI-suggested prompt before generating the image.
         </p>
         <form onSubmit={handleSubmit}>

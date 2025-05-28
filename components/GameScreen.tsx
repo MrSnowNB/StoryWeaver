@@ -6,6 +6,10 @@ import LoadingSpinner from './LoadingSpinner';
 import ImagePromptEditModal from './ImagePromptEditModal'; // New import
 import FullScreenImageModal from './FullScreenImageModal'; // New import
 import StoryArcDisplay from './StoryArcDisplay'; // New import
+import StoryArcInfoModal from './StoryArcInfoModal'; // Import the new modal
+import LearnMoreModal from './LearnMoreModal'; // Import the new centralized modal
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Import an icon
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; // For Learn More button
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 interface GameScreenProps {
@@ -167,6 +171,8 @@ const GameScreen: React.FC<GameScreenProps> = ({
   const [userInput, setUserInput] = useState('');
   const [showMemoryModal, setShowMemoryModal] = useState(false);
   const [memoryInputValue, setMemoryInputValue] = useState('');
+  const [isStoryArcInfoModalOpen, setIsStoryArcInfoModalOpen] = useState(false); 
+  const [isLearnMoreModalOpen, setIsLearnMoreModalOpen] = useState(false); // State for LearnMoreModal
 
   const memoryModalRef = useRef<HTMLDivElement>(null);
   const memoryInputRef = useRef<HTMLTextAreaElement>(null);
@@ -296,7 +302,17 @@ const GameScreen: React.FC<GameScreenProps> = ({
             <h1 className={`text-xl sm:text-2xl font-bold ${theme.name === 'Horror' ? 'text-red-500' : theme.name === 'Sci-Fi' ? 'text-cyan-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500'}`}>
             Your Story Unfolds...
             </h1>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+                 <button
+                  onClick={() => setIsLearnMoreModalOpen(true)}
+                  className={`${theme.colors.buttonSecondary} text-xs sm:text-sm py-2 px-3 focus:outline-none focus:ring-2 ${theme.colors.accent.replace('text-','focus:ring-')} flex items-center space-x-1`} 
+                  aria-label="Help and Learn More"
+                  disabled={isGeneratingNextPart}
+                  title="Learn more about creative writing with AI"
+                >
+                  <HelpOutlineIcon style={{ fontSize: '1.1rem' }} />
+                  <span>Learn</span>
+                </button>
                 <button
                   onClick={onExportStory}
                   className={`${theme.colors.buttonSecondary} text-xs sm:text-sm py-2 px-3 focus:outline-none focus:ring-2 ${theme.colors.accent.replace('text-','focus:ring-')}`} 
@@ -315,7 +331,7 @@ const GameScreen: React.FC<GameScreenProps> = ({
                 </button>
             </div>
         </div>
-         <div className="flex items-center justify-end w-full space-x-2">
+         <div className="flex items-center justify-end w-full space-x-2 mt-1">
             {/* StoryArcDisplay removed from here, will be in right panel */}
             {currentChapter && (
             <span 
@@ -425,6 +441,7 @@ const GameScreen: React.FC<GameScreenProps> = ({
                         disabled={!canRegenerate || isGeneratingNextPart}
                         className={`${theme.colors.buttonSecondary} ${(!canRegenerate || isGeneratingNextPart) ? 'opacity-50 cursor-not-allowed' : ''} text-xs sm:text-sm py-2 px-3 flex items-center space-x-2 focus:outline-none focus:ring-2 ${theme.colors.accent.replace('text-','focus:ring-')}`}
                         aria-label="Regenerate last AI response"
+                        title="Not happy with the AI's last response? Click to ask the AI to try generating a different continuation or set of choices. This is a way to guide the story if you don't like the current path."
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -438,6 +455,7 @@ const GameScreen: React.FC<GameScreenProps> = ({
                     disabled={isGeneratingNextPart}
                     className={`${theme.colors.buttonSecondary} ${isGeneratingNextPart ? 'opacity-50 cursor-not-allowed' : ''} text-xs sm:text-sm py-2 px-3 flex items-center space-x-2 focus:outline-none focus:ring-2 ${theme.colors.accent.replace('text-','focus:ring-')}`}
                     aria-label="Add a key memory"
+                    title="Help the AI remember key details for a more consistent story. Useful for character notes, past events, or specific facts."
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5h0a6 6 0 01-6-6v-1.5m6 7.5v-1.5m-6-6A6 6 0 0112 3v1.5m0 0V3m0 1.5a6 6 0 00-6 6v1.5m6-7.5V3m0 1.5A6 6 0 0118 9v1.5m-6-7.5h0a6 6 0 00-6 6v1.5m6-7.5V9" />
@@ -449,6 +467,7 @@ const GameScreen: React.FC<GameScreenProps> = ({
                     disabled={isGeneratingNextPart}
                     className={`${theme.colors.buttonSecondary} ${isGeneratingNextPart ? 'opacity-50 cursor-not-allowed' : ''} text-xs sm:text-sm py-2 px-3 flex items-center space-x-2 focus:outline-none focus:ring-2 ${theme.colors.accent.replace('text-','focus:ring-')}`}
                     aria-label="Request story recap"
+                    title="Lost track of the plot or want to see what the AI remembers? Click to request a summary of the story so far. This can help you (and the AI!) stay aligned on key events."
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -464,7 +483,16 @@ const GameScreen: React.FC<GameScreenProps> = ({
         <div className={`w-full md:w-1/3 border-t md:border-t-0 md:border-l ${theme.colors.border} ${theme.colors.secondary} flex flex-col`}>
             {/* Top Half: Story Arc Display */}
             <div className="flex-1 p-4 flex flex-col items-center justify-center border-b ${theme.colors.border} overflow-hidden">
-                 <h2 id="story-arc-heading" className={`${theme.colors.secondaryText} text-lg mb-1 font-semibold`}>Story Arc</h2>
+                 <div className="flex items-center justify-center mb-1">
+                    <h2 id="story-arc-heading" className={`${theme.colors.secondaryText} text-lg font-semibold`}>Story Arc</h2>
+                    <button
+                        onClick={() => setIsStoryArcInfoModalOpen(true)}
+                        className={`ml-2 ${theme.colors.secondaryText} hover:opacity-75 focus:outline-none focus:ring-1 ${theme.colors.accent.replace('text-','focus:ring-')}`}
+                        aria-label="Learn more about Story Arcs"
+                    >
+                        <InfoOutlinedIcon style={{ fontSize: '1.25rem' }} />
+                    </button>
+                 </div>
                  <div className="w-full">
                     <StoryArcDisplay currentStage={currentStoryArcStage} theme={theme} />
                  </div>
@@ -522,7 +550,7 @@ const GameScreen: React.FC<GameScreenProps> = ({
           <div className={`${theme.colors.cardBg} p-6 rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-100`}>
             <h3 id="memory-modal-title" className={`text-2xl font-semibold mb-4 ${theme.colors.text}`}>Add a Key Memory</h3>
             <p className={`text-sm mb-4 ${theme.colors.secondaryText}`}>
-              Add a piece of information, a past event, or a detail you want the AI to remember.
+              Help the AI build a richer, more consistent story! Add key details, character notes, or past events here. Providing specific memories helps the AI maintain coherence over longer narratives – a useful technique when working with AI.
             </p>
             <label htmlFor="memory-input" className="sr-only">Memory text input</label>
             <textarea
@@ -573,6 +601,18 @@ const GameScreen: React.FC<GameScreenProps> = ({
           onClose={onCloseFullScreenImage}
         />
       )}
+
+      <StoryArcInfoModal
+        isOpen={isStoryArcInfoModalOpen}
+        onClose={() => setIsStoryArcInfoModalOpen(false)}
+        theme={theme}
+      />
+
+      <LearnMoreModal
+        isOpen={isLearnMoreModalOpen}
+        onClose={() => setIsLearnMoreModalOpen(false)}
+        theme={theme}
+      />
     </div>
   );
 };
